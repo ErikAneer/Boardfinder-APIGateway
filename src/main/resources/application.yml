@@ -1,0 +1,36 @@
+## YAML Template.
+---
+server: port 8000
+
+zuul:
+    prefix: /boardfinder
+    routes:
+        snowboards:
+            path: /snowboards/**
+            url: http://localhost:8080/snowboards
+        techdetail:
+            path: /techdetails/**
+            url: http://localhost:8080/techdetails
+        shoesizes:
+            path: /shoesizes/**
+            url: http://localhost:8080/shoesizes
+        ridingterrain:
+            path: /ridingterrain/**
+            url: http://localhost:8080/ridingterrain
+        riderlevel:
+            path: /riderlevel/**
+            url: http://localhost:8080/riderlevel
+        displayedboards:
+            path: /displayedboards/**
+            url: http://localhost:8081/displayedboards
+        stats:
+            path: /stats/**
+            url: http://localhost:8081/stats
+        
+        endpoints:
+            trace: false
+            
+        ribbon: 
+            eureka:
+                enabled: false
+        
