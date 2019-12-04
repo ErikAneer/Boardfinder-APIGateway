@@ -3,34 +3,52 @@
 server: port 8000
 
 zuul:
+    ignoredServices: '*'
     prefix: /boardfinder
     routes:
         snowboards:
             path: /snowboards/**
-            url: http://localhost:8080/snowboards
+            ##url: http://localhost:8080/snowboards
+            serviceId: boardfinder
+            strip-prefix: false
         techdetail:
             path: /techdetails/**
-            url: http://localhost:8080/techdetails
+            ##url: http://localhost:8080/techdetails
+            serviceId: boardfinder
+            strip-prefix: false
         shoesizes:
             path: /shoesizes/**
-            url: http://localhost:8080/shoesizes
+            ##url: http://localhost:8080/shoesizes
+            serviceId: boardfinder
+            strip-prefix: false
         ridingterrain:
             path: /ridingterrain/**
-            url: http://localhost:8080/ridingterrain
+            ##url: http://localhost:8080/ridingterrain
+            serviceId: boardfinder
+            strip-prefix: false
         riderlevel:
             path: /riderlevel/**
-            url: http://localhost:8080/riderlevel
+            ##url: http://localhost:8080/riderlevel
+            serviceId: boardfinder
+            strip-prefix: false
         displayedboards:
             path: /displayedboards/**
-            url: http://localhost:8081/displayedboards
+            ##url: http://localhost:8081/displayedboards
+            serviceId: stats
+            strip-prefix: false
         stats:
             path: /stats/**
-            url: http://localhost:8081/stats
+           ## url: http://localhost:8081/stats
+            serviceId: stats
+            strip-prefix: false
         
-        endpoints:
-            trace: false
-            
-        ribbon: 
-            eureka:
-                enabled: false
-        
+    endpoints:
+        routes:
+            sensitive: false
+        trace:
+             sensitive: false
+
+    eureka:
+        client:
+           service-url:
+                default-zone: http://localhost:8761/eureka/
