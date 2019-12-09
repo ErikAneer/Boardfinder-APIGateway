@@ -8,38 +8,35 @@ zuul:
     routes:
         snowboards:
             path: /snowboards/**
-            ##url: http://localhost:8080/snowboards
             serviceId: boardfinder
             strip-prefix: false
         techdetail:
             path: /techdetails/**
-            ##url: http://localhost:8080/techdetails
             serviceId: boardfinder
             strip-prefix: false
         shoesizes:
             path: /shoesizes/**
-            ##url: http://localhost:8080/shoesizes
             serviceId: boardfinder
             strip-prefix: false
         ridingterrain:
             path: /ridingterrain/**
-            ##url: http://localhost:8080/ridingterrain
             serviceId: boardfinder
             strip-prefix: false
         riderlevel:
             path: /riderlevel/**
-            ##url: http://localhost:8080/riderlevel
             serviceId: boardfinder
             strip-prefix: false
         displayedboards:
             path: /displayedboards/**
-            ##url: http://localhost:8081/displayedboards
             serviceId: stats
             strip-prefix: false
         stats:
             path: /stats/**
-           ## url: http://localhost:8081/stats
             serviceId: stats
+            strip-prefix: false
+        stats:
+            path: /users/**
+            serviceId: users
             strip-prefix: false
         
     endpoints:
