@@ -1,0 +1,51 @@
+## YAML Template.
+---
+server: port 8000
+
+zuul:
+    ignoredServices: '*'
+    prefix: /boardfinder
+    routes:
+        snowboards:
+            path: /snowboards/**
+            serviceId: boardfinder
+            strip-prefix: false
+        techdetail:
+            path: /techdetails/**
+            serviceId: boardfinder
+            strip-prefix: false
+        shoesizes:
+            path: /shoesizes/**
+            serviceId: boardfinder
+            strip-prefix: false
+        ridingterrain:
+            path: /ridingterrain/**
+            serviceId: boardfinder
+            strip-prefix: false
+        riderlevel:
+            path: /riderlevel/**
+            serviceId: boardfinder
+            strip-prefix: false
+        displayedboards:
+            path: /displayedboards/**
+            serviceId: stats
+            strip-prefix: false
+        stats:
+            path: /stats/**
+            serviceId: stats
+            strip-prefix: false
+        users:
+            path: /users/**
+            serviceId: users
+            strip-prefix: false
+        
+    endpoints:
+        routes:
+            sensitive: false
+        trace:
+             sensitive: false
+
+    eureka:
+        client:
+           service-url:
+                default-zone: http://eureka-server:8761/
