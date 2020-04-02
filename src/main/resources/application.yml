@@ -1,40 +1,49 @@
-## YAML Template.
----
+
+## Application server port
 server: port 8000
 
+## Configuration of Zuul redirection paths
 zuul:
     ignoredServices: '*'
     prefix: /boardfinder
     routes:
+        ## Redirect snowboards calls to boardfinder service
         snowboards:
             path: /snowboards/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect techdetails calls to boardfinder  service  
         techdetail:
             path: /techdetails/**
             serviceId: boardfinder
             strip-prefix: false
+         ## Redirect shoesizes calls to boardfinder service   
         shoesizes:
             path: /shoesizes/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect ridingterrain calls to boardfinder service   
         ridingterrain:
             path: /ridingterrain/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect riderlevel calls to boardfinder  service  
         riderlevel:
             path: /riderlevel/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect displayedboards calls to stats  service  
         displayedboards:
             path: /displayedboards/**
             serviceId: stats
             strip-prefix: false
+        ## Redirect stats calls to stats  service   
         stats:
             path: /stats/**
             serviceId: stats
             strip-prefix: false
-        stats:
+        ## Redirect user calls to user service 
+        users:
             path: /users/**
             serviceId: users
             strip-prefix: false
@@ -45,6 +54,7 @@ zuul:
         trace:
              sensitive: false
 
+## Configuration to register itself to Eureka.
     eureka:
         client:
            service-url:

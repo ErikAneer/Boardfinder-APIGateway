@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
         
-	<groupId>Boardfinder</groupId>
-	<artifactId>APIgateway</artifactId>
+	<groupId>boardfinder</groupId>
+	<artifactId>apiGateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
                     <packaging>jar</packaging>
 	<description>API gateway for Boardfinder Microservice app</description>
