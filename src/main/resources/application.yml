@@ -4,6 +4,7 @@ server: port 8000
 
 ## Configuration of Zuul redirection paths
 zuul:
+    
     ignoredServices: '*'
     prefix: /boardfinder
     routes:
@@ -42,12 +43,14 @@ zuul:
             path: /stats/**
             serviceId: stats
             strip-prefix: false
-        ## Redirect user calls to user service 
-        users:
-            path: /users/**
-            serviceId: users
+        ## Redirect authorization calls to auth service 
+        auth:
+            path: /auth/**
+            serviceId: auth-service
             strip-prefix: false
-        
+            sensitiveHeaders: Cookie,Set-Cookie
+       
+            
     endpoints:
         routes:
             sensitive: false
