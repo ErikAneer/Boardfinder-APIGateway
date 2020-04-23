@@ -1,10 +1,10 @@
 
 ## Application server port
-server: port 8000
+server: port 8443
 
 ## Configuration of Zuul redirection paths
 zuul:
-    
+    sensitiveHeaders: Cookie,Set-Cookie
     ignoredServices: '*'
     prefix: /boardfinder
     routes:
@@ -38,24 +38,32 @@ zuul:
             path: /displayedboards/**
             serviceId: stats
             strip-prefix: false
-        ## Redirect stats calls to stats  service   
-        stats:
-            path: /stats/**
+        ## Redirect stats calls to stats service for statistics   
+        boardsearches:
+            path: /boardsearches/**
+            serviceId: stats
+            strip-prefix: false
+        ## Redirect stats calls to stats service for promotion   
+        promotion:
+            path: /promotion/**
             serviceId: stats
             strip-prefix: false
         ## Redirect authorization calls to auth service 
-        auth:
+        auth-service: 
             path: /auth/**
             serviceId: auth-service
             strip-prefix: false
-            sensitiveHeaders: Cookie,Set-Cookie
+        users: 
+            path: /users/**
+            serviceId: auth-service
+            strip-prefix: false
        
             
-    endpoints:
-        routes:
-            sensitive: false
-        trace:
-             sensitive: false
+   ## endpoints:
+      #  routes:
+           # sensitive: false
+      #  trace:
+          #   sensitive: false
 
 ## Configuration to register itself to Eureka.
     eureka:
