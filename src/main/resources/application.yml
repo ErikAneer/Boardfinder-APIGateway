@@ -1,51 +1,72 @@
-## YAML Template.
----
-server: port 8000
 
+## Application server port
+server: port 8443
+
+## Configuration of Zuul redirection paths
 zuul:
+    sensitiveHeaders: Cookie,Set-Cookie
     ignoredServices: '*'
     prefix: /boardfinder
     routes:
+        ## Redirect snowboards calls to boardfinder service
         snowboards:
             path: /snowboards/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect techdetails calls to boardfinder  service  
         techdetail:
             path: /techdetails/**
             serviceId: boardfinder
             strip-prefix: false
+         ## Redirect shoesizes calls to boardfinder service   
         shoesizes:
             path: /shoesizes/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect ridingterrain calls to boardfinder service   
         ridingterrain:
             path: /ridingterrain/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect riderlevel calls to boardfinder  service  
         riderlevel:
             path: /riderlevel/**
             serviceId: boardfinder
             strip-prefix: false
+        ## Redirect displayedboards calls to stats  service  
         displayedboards:
             path: /displayedboards/**
             serviceId: stats
             strip-prefix: false
-        stats:
-            path: /stats/**
+        ## Redirect stats calls to stats service for statistics   
+        boardsearches:
+            path: /boardsearches/**
             serviceId: stats
             strip-prefix: false
-        users:
-            path: /users/**
-            serviceId: users
+        ## Redirect stats calls to stats service for promotion   
+        promotion:
+            path: /promotion/**
+            serviceId: stats
             strip-prefix: false
-        
-    endpoints:
-        routes:
-            sensitive: false
-        trace:
-             sensitive: false
+        ## Redirect authorization calls to auth service 
+        auth-service: 
+            path: /auth/**
+            serviceId: auth-service
+            strip-prefix: false
+        users: 
+            path: /users/**
+            serviceId: auth-service
+            strip-prefix: false
+       
+            
+   ## endpoints:
+      #  routes:
+           # sensitive: false
+      #  trace:
+          #   sensitive: false
 
+## Configuration to register itself to Eureka.
     eureka:
         client:
            service-url:
-                default-zone: http://eureka-server:8761/eureka
+                default-zone: http://localhost:8761/eureka/
