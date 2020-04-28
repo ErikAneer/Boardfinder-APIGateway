@@ -15,6 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 
+/**
+ * Configuration class for handling what paths are open to access and what paths need to be authenticated, 
+ * @author Erik
+ */
 @EnableWebSecurity
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
@@ -27,16 +31,20 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomCorsFilter myCorsFilter;
 
+    /**
+     * Sets the configuration to the accessibility to the API Gatway paths 
+     * @param http
+     * @throws Exception 
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.addFilterBefore(myCorsFilter, ChannelProcessingFilter.class);
-        http
-                // check if possible to remove.        
+        http   
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/boardfinder/auth/**").permitAll()
-                .antMatchers(
+                  .antMatchers(
                         "/boardfinder/snowboards/**",
                         "/boardfinder/techdetails/**",
                         "/boardfinder/shoesizes/**",
@@ -52,7 +60,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig, tokenService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/boardfinder/displayedboards/**", "/boardfinder/boardsearches/**").hasRole("ADMIN")
+                .antMatchers("/boardfinder/displayedboards/**", "/boardfinder/boardsearches/**").hasRole("ADMIN")    
                 .anyRequest().authenticated();
     }
 

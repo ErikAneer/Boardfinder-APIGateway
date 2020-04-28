@@ -13,9 +13,6 @@ public class JwtConfig {
     @Value("${security.jwt.prefix:Bearer }")
     private String prefix;
 
-    //@Value("${security.jwt.expiration:#{24*60*60}}")
-    //private int expiration;
-
     @Value("${security.jwt.secret:JwtSecretKey}")
     private String secret;
 
@@ -30,10 +27,6 @@ public class JwtConfig {
     public String getPrefix() {
         return prefix;
     }
-
-    //public int getExpiration() {
-    //    return expiration;
-    //}
 
     public String getSecret() {
         return secret;

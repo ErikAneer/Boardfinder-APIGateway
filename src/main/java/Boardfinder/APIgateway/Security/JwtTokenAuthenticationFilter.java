@@ -14,86 +14,73 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import Boardfinder.APIgateway.Security.JwtConfig;
 import Boardfinder.APIgateway.Service.ActiveTokenService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.nio.file.AccessDeniedException;
 
-public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
-    
-	private final JwtConfig jwtConfig;
-        
-                 private ActiveTokenService tokenService;
-	
-	public JwtTokenAuthenticationFilter(JwtConfig jwtConfig, ActiveTokenService tokenService) {
-		this.jwtConfig = jwtConfig;
-                                    this.tokenService = tokenService;
-	}
+/**
+ * JWT Filter class that filters incoming http requests. Modified code from Omar
+ * El Gabry
+ */
+public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
-		          System.out.println("Entered doFilterInterna in APIGATEWAY");
-		// 1. get the authentication header. Tokens are supposed to be passed in the authentication header
-		String header = request.getHeader(jwtConfig.getHeader());
-		System.out.println("headerl " + header);
-		// 2. validate the header and check the prefix
-		if(header == null || !header.startsWith(jwtConfig.getPrefix())) {
-			chain.doFilter(request, response);  		// If not valid, go to the next filter.
-			return;
-		}
-		
-		// If there is no token provided and hence the user won't be authenticated. 
-		// It's Ok. Maybe the user accessing a public path or asking for a token.
-		
-		// All secured paths that needs a token are already defined and secured in config class.
-		// And If user tried to access without access token, then he won't be authenticated and an exception will be thrown.
-		
-		// 3. Get the token
-		String token = header.replace(jwtConfig.getPrefix(), "");
-		
-		try {	// exceptions might be thrown in creating the claims if for example the token is expired
-			
-			// 4. Validate the token
-			Claims claims = Jwts.parser()
-					.setSigningKey(jwtConfig.getSecret().getBytes())
-					.parseClaimsJws(token)
-					.getBody();
-			
-			String username = claims.getSubject();
-			if(username != null) {
-				@SuppressWarnings("unchecked")
-				List<String> authorities = (List<String>) claims.get("authorities");
-				
-				// 5. Create auth object
-				// UsernamePasswordAuthenticationToken: A built-in object, used by spring to represent the current authenticated / being authenticated user.
-				// It needs a list of authorities, which has type of GrantedAuthority interface, where SimpleGrantedAuthority is an implementation of that interface
-				 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-								 username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-				 
-				 // 6. Authenticate the user
-				 // Now, user is authenticated
-                                                                        System.out.println("User authenticated in doFilterInternal method in Zuul."); // This is only reached if the token is ok. Test several times. And create a path to the db from here to update the token timestamp.
-                                                                      if(!tokenService.checkIfActiveToken(token)) {
-                                                                            SecurityContextHolder.clearContext();
-                                                                            throw new AccessDeniedException("Valid token does not exist");
-                                                                      }
-                                                                          
-				 SecurityContextHolder.getContext().setAuthentication(auth);
-			}
-			
-		} catch (AccessDeniedException e) {
-			// In case of failure. Make sure it's clear; so guarantee user won't be authenticated
-			SecurityContextHolder.clearContext();
-                        
-                                                       // throw 401 Unauthorized Error 
-                                                        throw new AccessDeniedException("Access denied");
-		}
-		
-		// go to the next filter in the filter chain
-		chain.doFilter(request, response);
-	}
+    private final JwtConfig jwtConfig;
 
+    private ActiveTokenService tokenService;
+
+    public JwtTokenAuthenticationFilter(JwtConfig jwtConfig, ActiveTokenService tokenService) {
+        this.jwtConfig = jwtConfig;
+        this.tokenService = tokenService;
+    }
+
+    /**
+     * Filters the incoming http request to see if it contains a valid token.
+     * Filter method is called if a token is in the request header or if a path
+     * that needs to be checked is tried to be accessed that should have a
+     * token. Is designed to throw a AccessDeniedException in case no valid
+     * token is identified.
+     */
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        String header = request.getHeader(jwtConfig.getHeader());
+
+        if (header == null || !header.startsWith(jwtConfig.getPrefix())) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String token = header.replace(jwtConfig.getPrefix(), "");
+
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(jwtConfig.getSecret().getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String username = claims.getSubject();
+            if (username != null) {
+                @SuppressWarnings("unchecked")
+                List<String> authorities = (List<String>) claims.get("authorities");
+
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+
+                if (!tokenService.checkIfActiveToken(token)) {
+                    SecurityContextHolder.clearContext();
+                    response.sendError(401, "Valid token does not exist");
+                    return;
+                } else {
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    chain.doFilter(request, response);
+                }
+            }
+            ;
+        } catch (AccessDeniedException e) {
+            SecurityContextHolder.clearContext();
+            throw new AccessDeniedException("Access denied");
+        }
+    }
 }

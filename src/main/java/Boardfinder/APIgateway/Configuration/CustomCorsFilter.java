@@ -1,6 +1,3 @@
-/*
-
- */
 package Boardfinder.APIgateway.Configuration;
 
 import java.io.IOException;
@@ -18,50 +15,61 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * Custom cors filter configuration that overrides the standard filter and sets rules for access to the API. 
- * Needed to avoid pre-flight request errors. 
+ * Custom cors filter configuration that intercepts the HTTP requests and
+ * responses before passing . Needed to avoid pre-flight request errors.
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CustomCorsFilter implements Filter{
+public class CustomCorsFilter implements Filter {
 
-public CustomCorsFilter () {
-    super();
-}
+    public CustomCorsFilter() {
+        super();
+    }
 
-/**
- * Method that sets custom filter qriteria.
- * @param req
- * @param res
- * @param chain
- * @throws IOException
- * @throws ServletException 
- */
-@Override
-public final void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
-    final HttpServletResponse response = (HttpServletResponse) res;
-    response.setHeader("Access-Control-Allow-Origin", "https://localhost:4200");
-    response.setHeader("Access-Control-Allow-Credentials", "true");
-    response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE"); // remove delete and put?
-    response.setHeader("Access-Control-Max-Age", "3600");
-    response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Origin, Content-Type, Version, Access-Control-Allow-Headers, observe");
-    response.setHeader("Access-Control-Expose-Headers", "X-Requested-With, Authorization, Origin, Content-Type, observe ");
+    /**
+     * Method that sets custom filter qriteria for intercepting the HTTP
+     * requests and responses. Needed to avoid pre-flight request errors when
+     * the API Gateway is called from a browser.
+     *
+     * @param req
+     * @param res
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
+    @Override
+    public final void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
+        final HttpServletResponse response = (HttpServletResponse) res;
+        response.setHeader("Access-Control-Allow-Origin", "https://localhost:4200");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Authorization, Origin, Content-Type, Version, Access-Control-Allow-Headers, observe");
+        response.setHeader("Access-Control-Expose-Headers", "X-Requested-With, Authorization, Origin, Content-Type, observe ");
 
-    final HttpServletRequest request = (HttpServletRequest) req;
-    
-    if (!request.getMethod().equals("OPTIONS")) {
-        chain.doFilter(req, res);
-    } else {
-        // do not continue with filter chain for options requests
-    }   
-}
+        final HttpServletRequest request = (HttpServletRequest) req;
+        System.out.println(request.getRequestURL());
+        
+        if (!request.getMethod().equals("OPTIONS")) {
+            chain.doFilter(req, res);
+        }
+    }
 
-@Override
-public void destroy() {
+    /**
+     * Filter destroy method needed when implementing a custom filter
+     */
+    @Override
+    public void destroy() {
 
-} 
+    }
 
-@Override
-public void init(FilterConfig filterConfig) throws ServletException {       
-}
+    /**
+     * Filter init method needed when implementing a custom filter
+     *
+     * @param filterConfig
+     * @throws ServletException
+     */
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 }
