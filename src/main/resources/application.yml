@@ -59,11 +59,6 @@ zuul:
             strip-prefix: false
        
             
-   ## endpoints:
-      #  routes:
-           # sensitive: false
-      #  trace:
-          #   sensitive: false
 
 ## Configuration to register itself to Eureka.
     eureka:
