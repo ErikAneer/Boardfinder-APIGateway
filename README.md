@@ -52,6 +52,7 @@ If you wish you can use your own MySQL user instead of the above as long as it h
 3. Run the five Spring Boot applications. Run the Service Registry first to save some time as the other applications will to try to register to it when they start. Then start the API-Gateway and after that the three remaining projects.
 4. Start the Angular Client from it's root folder in an IDE as Visual Studio Code or from the command line with the command 'ng serve'.
 5. Browse to https://localhost:4200/ to use the app!
+*Please note that it might take a little time before all microservices have registered themselves to the Service Registry and the application is up and running correctly. 
 
 
 
