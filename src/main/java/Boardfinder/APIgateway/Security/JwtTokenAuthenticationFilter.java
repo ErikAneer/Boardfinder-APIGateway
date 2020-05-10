@@ -41,6 +41,11 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
      * that needs to be checked is tried to be accessed that should have a
      * token. Is designed to throw a AccessDeniedException in case no valid
      * token is identified.
+     * @param request
+     * @param response
+     * @param chain
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
