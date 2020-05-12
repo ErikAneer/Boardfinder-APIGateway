@@ -13,7 +13,7 @@ public class JwtConfig {
     @Value("${security.jwt.prefix:Bearer }")
     private String prefix;
 
-    @Value("${security.jwt.secret:JwtSecretKey}")
+    @Value("${security.jwt.secret:TheBestBoardfinderEver}")
     private String secret;
 
     public String getUri() {

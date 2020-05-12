@@ -48,8 +48,7 @@ public class CustomCorsFilter implements Filter {
         response.setHeader("Access-Control-Expose-Headers", "X-Requested-With, Authorization, Origin, Content-Type, observe ");
 
         final HttpServletRequest request = (HttpServletRequest) req;
-        System.out.println(request.getRequestURL());
-        
+   
         if (!request.getMethod().equals("OPTIONS")) {
             chain.doFilter(req, res);
         }

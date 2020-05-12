@@ -53,7 +53,8 @@ If you wish you can use your own MySQL user instead of the above as long as it h
 4. Start the Angular Client from it's root folder in an IDE as Visual Studio Code or from the command line with the command 'ng serve'.
 5. Browse to https://localhost:4200/ to use the app!
 
+*Please note that it might take a little time before all microservices have registered themselves to the Service Registry and the application is up and running correctly.
 
-
+*Please also note that the app will not show any statistics or recommendations until searches have been made in the app. 
 
 
